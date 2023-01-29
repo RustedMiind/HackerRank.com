@@ -1,8 +1,8 @@
 function matrixRotation(m, rotations) {
   function matrixRotationOneTime(matrix = m) {
     // Write your code here
-    console.log(matrix);
-    let restultMatrix = createEmpty2DArray(matrix[0].length, matrix[1].length);
+    // console.log(matrix);
+    let restultMatrix = createEmpty2DArray(matrix.length, matrix[0].length);
     function handleOrbital(
       // first parameter :
       matrixToHandle = [...matrix],
@@ -16,15 +16,15 @@ function matrixRotation(m, rotations) {
       // for loop for y axis
     ) {
       for (let y = border.topLeft[0]; y <= border.bottomLeft[0]; y++) {
-        console.log(
-          "Row : ",
-          y,
-          "Length : ",
-          border.bottomLeft[0] - border.topRight[0] + 1
-        );
+        // console.log(
+        //   "Row : ",
+        //   y,
+        //   "Length : ",
+        //   border.bottomLeft[0] - border.topRight[0] + 1
+        // );
         // for loop for x axis
         for (let x = border.topLeft[1]; x <= border.topRight[1]; x++) {
-          console.log(y, x, "Value : ", matrixToHandle[y][x]);
+          // console.log(y, x, "Value : ", matrixToHandle[y][x]);
         }
       }
       let orbitalXLength = border.topRight[1] - border.bottomLeft[1] + 1,
@@ -32,7 +32,7 @@ function matrixRotation(m, rotations) {
       // loop that loops in border Elements only
       // Write code inside the if condition only
       let tempArr = createEmpty2DArray(matrix[0].length, matrix[1].length);
-      console.log("Result Matrix Before ", tempArr);
+      // console.log("Result Matrix Before ", tempArr);
       for (
         let rowIndex = border.topLeft[0];
         rowIndex <= border.bottomRight[0];
@@ -44,17 +44,17 @@ function matrixRotation(m, rotations) {
           columnIndex++
         ) {
           if (
-            (rowIndex <= border.topRight[1] &&
-              rowIndex >= border.bottomLeft[1] &&
-              (columnIndex === border.bottomLeft[0] ||
-                columnIndex === border.topRight[0])) ||
-            (columnIndex >= border.topRight[0] &&
-              columnIndex <= border.bottomLeft[0] &&
-              (rowIndex === border.bottomLeft[1] ||
-                rowIndex === border.topRight[1]))
+            (rowIndex >= border.topLeft[0] &&
+              rowIndex <= border.bottomRight[0] &&
+              (columnIndex === border.bottomLeft[1] ||
+                columnIndex === border.topRight[1])) ||
+            (columnIndex >= border.topLeft[1] &&
+              columnIndex <= border.bottomRight[1] &&
+              (rowIndex === border.bottomLeft[0] ||
+                rowIndex === border.topRight[0]))
           ) {
             // Write your code here for border elements
-            tempArr[rowIndex][columnIndex] = matrix[rowIndex][columnIndex];
+            // console.log("Calling step function");
             let direction = "";
             if (
               rowIndex === border.topLeft[0] &&
@@ -89,17 +89,23 @@ function matrixRotation(m, rotations) {
               [rowIndex, columnIndex],
               direction
             );
-            console.log(setRow, setColumn);
+            // console.log(
+            //   "old Row index",
+            //   rowIndex,
+            //   "old column index",
+            //   columnIndex
+            // );
+            // console.log("New Row index", setRow, "New column index", setColumn);
             restultMatrix[setRow][setColumn] =
               matrixToHandle[rowIndex][columnIndex];
-            console.log(matrixToHandle[rowIndex][columnIndex]);
+            // console.log(matrixToHandle[rowIndex][columnIndex]);
           }
         }
       }
-      console.log("Result Matrix After ", restultMatrix);
-      console.log("Test array handling", tempArr);
-      console.log(border);
-      console.log(`Length [X : ${orbitalXLength}] , Y : ${orbitalYLength}`);
+      // console.log("Result Matrix After ", restultMatrix);
+      // console.log("Test array handling", tempArr);
+      // console.log(border);
+      // console.log(`Length [X : ${orbitalXLength}] , Y : ${orbitalYLength}`);
       if (orbitalXLength > 2 && orbitalYLength > 2) {
         let borderNew = {
           topLeft: border.topLeft,
@@ -126,10 +132,11 @@ function matrixRotation(m, rotations) {
         handleOrbital(matrixToHandle, borderNew);
       }
 
-      console.log("Last Line of Code : ", restultMatrix, matrix);
+      // console.log("Last Line of Code : ", restultMatrix, matrix);
     }
     function elementStep(position, direction) {
-      let positionNew;
+      // console.log("One element mooved");
+      let positionNew = [null, null];
       switch (direction) {
         case "row+":
           positionNew = [position[0] + 1, position[1]];
@@ -147,7 +154,7 @@ function matrixRotation(m, rotations) {
         default:
           break;
       }
-      return [...positionNew];
+      return positionNew;
     }
     function createEmpty2DArray(rows, columns) {
       let result = [];
@@ -168,15 +175,16 @@ function matrixRotation(m, rotations) {
     matrixToEdit = matrixRotationOneTime(matrixToEdit);
   }
   for (let i = 0; i < matrixToEdit.length; i++) {
-    console.log(matrixToEdit[i]);
+    console.log(...matrixToEdit[i]);
   }
 }
 matrixRotation(
   [
-    ["A", "B", "C", "D"],
-    ["E", "F", "G", "H"],
-    ["I", "J", "K", "L"],
-    ["M", "N", "O", "P"],
+    [1, 2, 3, 4],
+    [7, 8, 9, 10],
+    [13, 14, 15, 16],
+    [19, 20, 21, 22],
+    [65, 75, 42, 11],
   ],
-  5
+  2
 );
