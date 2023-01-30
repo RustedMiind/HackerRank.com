@@ -1,0 +1,186 @@
+function matrixRotation(m, rotations) {
+  // console.log("Old Matrix : ", m);
+  let matrix = m.map(function (arr) {
+    return arr.slice();
+  });
+  let resultMatrix = createEmpty2DArray(matrix.length, matrix[0].length);
+  function handleOrbital(
+    // first parameter :
+    matrixToHandle = [...matrix],
+    // second parameter :
+    border = {
+      topLeft: [0, 0],
+      topRight: [0, matrix[0].length - 1],
+      bottomLeft: [matrix.length - 1, 0],
+      bottomRight: [matrix.length - 1, matrix[0].length - 1],
+    }
+    // for loop for rows
+  ) {
+    let orbitalXLength = border.topRight[1] - border.bottomLeft[1] + 1, // Columns
+      orbitalYLength = border.bottomRight[0] - border.topRight[0] + 1; // Rows
+    let parameter = (orbitalXLength + orbitalYLength - 2) * 2;
+    let steps = rotations > parameter ? rotations % parameter : rotations;
+    // loop that loops in border Elements only
+    // Write code inside the if condition only
+    let tempArr = createEmpty2DArray(matrix[0].length, matrix[1].length);
+    // console.log("Result Matrix Before ", tempArr);
+    for (
+      let rowIndex = border.topLeft[0];
+      rowIndex <= border.bottomRight[0];
+      rowIndex++
+    ) {
+      for (
+        let columnIndex = border.topLeft[1];
+        columnIndex <= border.bottomRight[1];
+        columnIndex++
+      ) {
+        let [setRow, setColumn] = elementStep(
+          [rowIndex, columnIndex],
+          border,
+          steps
+        );
+        resultMatrix[setRow][setColumn] = matrix[rowIndex][columnIndex];
+
+        // elementStep(position, border, steps)
+      }
+    }
+    // console.log("Result Matrix After ", restultMatrix);
+    // console.log("Test array handling", tempArr);
+    // console.log(border);
+    // console.log(`Length [X : ${orbitalXLength}] , Y : ${orbitalYLength}`);
+    if (orbitalXLength > 2 && orbitalYLength > 2) {
+      let borderNew = {
+        topLeft: border.topLeft,
+        topRight: border.topRight,
+        bottomLeft: border.bottomLeft,
+        bottomRight: border.bottomRight,
+      };
+      borderNew.topLeft = [borderNew.topLeft[0] + 1, borderNew.topLeft[1] + 1];
+      borderNew.topRight = [
+        borderNew.topRight[0] + 1,
+        borderNew.topRight[1] - 1,
+      ];
+      borderNew.bottomLeft = [
+        borderNew.bottomLeft[0] - 1,
+        borderNew.bottomLeft[1] + 1,
+      ];
+      borderNew.bottomRight = [
+        borderNew.bottomRight[0] - 1,
+        borderNew.bottomRight[1] - 1,
+      ];
+      handleOrbital(matrixToHandle, borderNew);
+    }
+
+    // console.log("Last Line of Code : ", restultMatrix, matrix);
+  }
+  handleOrbital();
+  for (let i = 0; i < resultMatrix.length; i++) {
+    console.log(...resultMatrix[i]);
+  }
+  function elementStep(position, border, steps) {
+    let positionNew = [...position];
+    let [rowIndex, columnIndex] = positionNew;
+    for (let step = 0; step < steps; step++) {
+      let direction = "";
+      if (
+        (rowIndex >= border.topLeft[0] &&
+          rowIndex <= border.bottomRight[0] &&
+          (columnIndex === border.bottomLeft[1] ||
+            columnIndex === border.topRight[1])) ||
+        (columnIndex >= border.topLeft[1] &&
+          columnIndex <= border.bottomRight[1] &&
+          (rowIndex === border.bottomLeft[0] ||
+            rowIndex === border.topRight[0]))
+      ) {
+        // Write your code here for border elements
+        // console.log("Calling step function");
+        if (
+          rowIndex === border.topLeft[0] &&
+          columnIndex === border.topLeft[1]
+        ) {
+          direction = "row+";
+        } else if (
+          rowIndex === border.topRight[0] &&
+          columnIndex === border.topRight[1]
+        ) {
+          direction = "column-";
+        } else if (
+          rowIndex === border.bottomLeft[0] &&
+          columnIndex === border.bottomLeft[1]
+        ) {
+          direction = "column+";
+        } else if (
+          rowIndex === border.bottomRight[0] &&
+          columnIndex === border.bottomRight[1]
+        ) {
+          direction = "row-";
+        } else if (rowIndex === border.topRight[0]) {
+          direction = "column-";
+        } else if (columnIndex === border.topLeft[1]) {
+          direction = "row+";
+        } else if (columnIndex === border.bottomRight[1]) {
+          direction = "row-";
+        } else if (rowIndex === border.bottomLeft[0]) {
+          direction = "column+";
+        }
+        // console.log(
+        //   "old Row index",
+        //   rowIndex,
+        //   "old column index",
+        //   columnIndex
+        // );
+        // console.log("New Row index", setRow, "New column index", setColumn);
+        // console.log(matrixToHandle[rowIndex][columnIndex]);
+      }
+      // console.log("One element mooved");
+      switch (direction) {
+        case "row+":
+          positionNew = [positionNew[0] + 1, positionNew[1]];
+          break;
+        case "column+":
+          positionNew = [positionNew[0], positionNew[1] + 1];
+          break;
+        case "row-":
+          positionNew = [positionNew[0] - 1, positionNew[1]];
+          break;
+        case "column-":
+          positionNew = [positionNew[0], positionNew[1] - 1];
+          break;
+
+        default:
+          break;
+      }
+      rowIndex = positionNew[0];
+      columnIndex = positionNew[1];
+    }
+    return positionNew;
+  }
+
+  function copyArray(array) {
+    let result = [];
+    for (let i in array) result.push(array[i]);
+    return result;
+  }
+  function createEmpty2DArray(rows, columns) {
+    let result = [];
+    for (let i = 0; i < rows; i++) {
+      let row = [];
+      for (let j = 0; j < columns; j++) {
+        row.push("");
+      }
+      result.push(row);
+    }
+    return result;
+  }
+}
+
+matrixRotation(
+  [
+    [1, 2, 3, 4],
+    [7, 8, 9, 10],
+    [13, 14, 15, 16],
+    [19, 20, 21, 22],
+    [65, 75, 42, 11],
+  ],
+  15
+);
